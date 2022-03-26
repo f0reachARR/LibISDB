@@ -89,11 +89,19 @@ namespace LibISDB
 				struct {
 					uint8_t Length;
 					const char *pText;
+				} Type;
+				struct {
+					uint8_t Length;
+					const char *pText;
 				} Name;
 				struct {
 					bool IsValid;
 					uint32_t CRC32;
 				} CRC;
+				struct {
+					uint8_t Type = -1;
+					uint32_t OriginalSize;
+				} Compression; 
 			} ModuleDesc;
 		};
 

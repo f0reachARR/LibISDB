@@ -178,6 +178,11 @@ bool DownloadInfoIndicationParser::ParseData(const uint8_t *pData, uint16_t Data
 				break;
 
 			switch (DescTag) {
+            case 0x01:  // Type descriptor
+                Module.ModuleDesc.Type.Length = DescLength;
+				Module.ModuleDesc.Type.pText = (const char*)(&pData[Pos + DescPos]);
+                break;
+
 			case 0x02:	// Name descriptor
 				Module.ModuleDesc.Name.Length = DescLength;
 				Module.ModuleDesc.Name.pText = (const char *)(&pData[Pos + DescPos]);
@@ -187,6 +192,13 @@ bool DownloadInfoIndicationParser::ParseData(const uint8_t *pData, uint16_t Data
 				if (DescLength == 4) {
 					Module.ModuleDesc.CRC.IsValid = true;
 					Module.ModuleDesc.CRC.CRC32 = Load32(&pData[Pos + DescPos]);
+				}
+				break;
+
+			case 0xC2:	// Compression descriptor
+				if (DescLength == 5) {
+					Module.ModuleDesc.Compression.Type = pData[Pos + DescPos];
+					Module.ModuleDesc.Compression.OriginalSize = Load32(&pData[Pos + DescPos + 1]);
 				}
 				break;
 			}
